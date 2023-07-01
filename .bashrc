@@ -111,6 +111,9 @@ alias ra=ranger
 alias iam=neofetch
 alias fb="source .bashrc"
 alias bye="shutdown now"
+alias hk="~/.scripts/hook.sh"
+alias gk="~/.scripts/goHook.sh"
+alias ck="~/.scripts/clHook.sh"
 
 xhost +local:root > /dev/null 2>&1
 
