@@ -59,12 +59,18 @@ match_lhs=""
 	&& match_lhs=$(dircolors --print-database)
 [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] && use_color=true
 
-bg1=214
-fg1=226
-bg2=202
-fg2=88
-bg3=196
-fg3=17
+bg1=128
+fg1=206
+bg2=55
+fg2=69
+bg3=17
+fg3=34
+#bg1=214
+#fg1=226
+#bg2=202
+#fg2=88
+#bg3=196
+#fg3=17
 if ${use_color} ; then
 	# Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
 	if type -P dircolors >/dev/null ; then
