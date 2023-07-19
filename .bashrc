@@ -80,11 +80,19 @@ if ${use_color} ; then
 			eval $(dircolors -b /etc/DIR_COLORS)
 		fi
 	fi
+	# Check if ssh user
+	ssh_flag=""
+	export|grep SSH_TTY -i > /dev/null
+	if [ $? == 0 ]; then
+		ssh_flag="󱈘 "
+	else
+		ssh_flag="󰐂 "
+	fi
 
 	if [[ ${EUID} == 0 ]] ; then
-		PS1="\[\e[48;5;$bg1;38;5;$fg1""m\] \u \[\e[48;5;$bg2;38;5;$bg1""m\] \[\e[48;5;$bg2;38;5;$fg2""m\]  \[\e[48;5;$bg3;38;5;$bg2""m\] \[\e[48;5;$bg3;38;5;$fg3""m\] \W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
+		PS1="\[\e[48;5;$bg1;38;5;$fg1""m\] \u \[\e[48;5;$bg2;38;5;$bg1""m\] \[\e[48;5;$bg2;38;5;$fg2""m\]"$ssh_flag" \[\e[48;5;$bg3;38;5;$bg2""m\] \[\e[48;5;$bg3;38;5;$fg3""m\] \W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
 	else
-		PS1="\[\e[48;5;$bg1;38;5;$fg1""m\] \u \[\e[48;5;$bg2;38;5;$bg1""m\] \[\e[48;5;$bg2;38;5;$fg2""m\]  \[\e[48;5;$bg3;38;5;$bg2""m\] \[\e[48;5;$bg3;38;5;$fg3""m\] \W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
+		PS1="\[\e[48;5;$bg1;38;5;$fg1""m\] \u \[\e[48;5;$bg2;38;5;$bg1""m\] \[\e[48;5;$bg2;38;5;$fg2""m\]"$ssh_flag" \[\e[48;5;$bg3;38;5;$bg2""m\] \[\e[48;5;$bg3;38;5;$fg3""m\] \W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
 	fi
 
 	alias ls='ls --color=auto'
