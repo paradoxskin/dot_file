@@ -90,9 +90,9 @@ if ${use_color} ; then
 	fi
 
 	if [[ ${EUID} == 0 ]] ; then
-		PS1="\[\e[48;5;$bg1;38;5;$fg1""m\] \u \[\e[48;5;$bg2;38;5;$bg1""m\] \[\e[48;5;$bg2;38;5;$fg2""m\]"$ssh_flag" \[\e[48;5;$bg3;38;5;$bg2""m\] \[\e[48;5;$bg3;38;5;$fg3""m\] \W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
+		PS1="\[\e[48;5;$bg1;38;5;$fg1""m\] \u \[\e[48;5;$bg2;38;5;$bg1""m\] \[\e[48;5;$bg2;38;5;$fg2""m\]"$ssh_flag" \[\e[48;5;$bg3;38;5;$bg2""m\] \[\e[48;5;$bg3;38;5;$fg3""m\] \W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
 	else
-		PS1="\[\e[48;5;$bg1;38;5;$fg1""m\] \u \[\e[48;5;$bg2;38;5;$bg1""m\] \[\e[48;5;$bg2;38;5;$fg2""m\]"$ssh_flag" \[\e[48;5;$bg3;38;5;$bg2""m\] \[\e[48;5;$bg3;38;5;$fg3""m\] \W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
+		PS1="\[\e[48;5;$bg1;38;5;$fg1""m\] \u \[\e[48;5;$bg2;38;5;$bg1""m\] \[\e[48;5;$bg2;38;5;$fg2""m\]"$ssh_flag" \[\e[48;5;$bg3;38;5;$bg2""m\] \[\e[48;5;$bg3;38;5;$fg3""m\] \W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
 	fi
 
 	alias ls='ls --color=auto'
@@ -122,6 +122,8 @@ alias bye="shutdown now"
 alias hk="~/.scripts/hook.sh"
 alias gk="~/.scripts/goHook.sh"
 alias ck="~/.scripts/clHook.sh"
+
+source ~/.profile
 
 xhost +local:root > /dev/null 2>&1
 
