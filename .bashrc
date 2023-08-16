@@ -110,6 +110,42 @@ else
 	fi
 fi
 
+function nice_ps1() {
+    while true; do
+        # ssh_flag
+        ssh_flag=''
+        export|grep SSH_TTY -i > /dev/null
+        if [ $? == 0 ]; then
+            ssh_flag='󱩜'
+            ssh_color='[38;5;27m'
+        else
+            ssh_flag='󰐂'
+            ssh_color='[38;5;160m'
+        fi
+
+        # username
+        username=`whoami`
+
+        # powerd
+        if [[ $PWD == $HOME ]]; then
+            powerd='~'
+        else
+            powerd=${PWD##*/}
+        fi
+
+        #root
+        if [[ $EUID == 0 ]]; then
+            root=''
+        else
+            root=''
+        fi
+
+        read -e -p $ssh_color$ssh_flag' [48;5;128;38;5;206m '$username' [48;5;17;38;5;128m  [48;5;17;38;5;69m'$root' [48;5;17;38;5;34m'$powerd' [0m[38;5;17m[0m ' cmd
+        echo -e "\e[1A\r\e[38;5;239m$ssh_flag  $username   $root $powerd 󰄾\e[0m"
+        eval "$cmd"
+    done
+}
+
 unset use_color safe_term match_lhs sh
 
 #alias cp="cp -i"                          # confirm before overwriting something
@@ -166,3 +202,5 @@ ex ()
     echo "'$1' is not a valid file"
   fi
 }
+
+nice_ps1
