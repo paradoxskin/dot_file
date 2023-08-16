@@ -140,7 +140,7 @@ function nice_ps1() {
             root=''
         fi
 
-        read -e -p $ssh_color$ssh_flag' [48;5;128;38;5;206m '$username' [48;5;17;38;5;128m  [48;5;17;38;5;69m'$root' [48;5;17;38;5;34m'$powerd' [0m[38;5;17m[0m ' cmd
+        read -e -p $ssh_color$ssh_flag' [48;5;55;38;5;206m '$username' [48;5;17;38;5;55m  [48;5;17;38;5;69m'$root' [48;5;17;38;5;34m'$powerd' [0m[38;5;17m[0m ' cmd
         echo -e "\e[1A\r\e[38;5;239m$ssh_flag  $username   $root $powerd 󰄾\e[0m"
         eval "$cmd"
     done
