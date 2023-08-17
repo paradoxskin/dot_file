@@ -33,6 +33,10 @@ colors() {
 
 [ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
+# autocomplete
+bind 'TAB:menu-complete'
+bind '"\e[Z":menu-complete-backward'
+#bind 'set show-all-if-ambiguous on'
 use_color=true
 
 # Set colorful PS1 only on colorful terminals.
