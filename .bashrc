@@ -65,7 +65,7 @@ if ${use_color} ; then
 	alias fgrep='fgrep --colour=auto'
 
 	# Check if ssh user
-	export|grep SSH_TTY -i > /dev/null
+	export|grep SSH_CONNECTION -i > /dev/null
 	if [ $? == 0 ]; then
 		ssh_flag="󱩜 "
 		ssh_color="\[\e[0m\]\[\e[38;5;27m\]"
