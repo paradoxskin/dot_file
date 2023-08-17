@@ -33,16 +33,6 @@ colors() {
 
 [ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
-# Change the window title of X terminals
-case ${TERM} in
-	xterm*|rxvt*|Eterm*|aterm|kterm|gnome*|interix|konsole*)
-		PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/\~}\007"'
-		;;
-	screen*)
-		PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/\~}\033\\"'
-		;;
-esac
-
 use_color=true
 
 # Set colorful PS1 only on colorful terminals.
@@ -59,18 +49,6 @@ match_lhs=""
 	&& match_lhs=$(dircolors --print-database)
 [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] && use_color=true
 
-bg1=128
-fg1=206
-bg2=55
-fg2=69
-bg3=17
-fg3=34
-#bg1=214
-#fg1=226
-#bg2=202
-#fg2=88
-#bg3=196
-#fg3=17
 if ${use_color} ; then
 	# Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
 	if type -P dircolors >/dev/null ; then
@@ -80,70 +58,65 @@ if ${use_color} ; then
 			eval $(dircolors -b /etc/DIR_COLORS)
 		fi
 	fi
-	# Check if ssh user
-	ssh_flag=""
-	export|grep SSH_TTY -i > /dev/null
-	if [ $? == 0 ]; then
-		#ssh_flag="\[\e[48;5;$bg2;38;5;27""m\]󱩜 "
-		ssh_flag="\[\e[0m\]\[\e[38;5;27""m\]󱩜 "
-	else
-		#ssh_flag="\[\e[48;5;$bg2;38;5;160""m\]󰐂 "
-		ssh_flag="\[\e[0m\]\[\e[38;5;160""m\]󰐂 "
-	fi
-
-	if [[ ${EUID} == 0 ]] ; then
-		PS1="$ssh_flag\[\e[48;5;$bg2;38;5;$fg1""m\] \u \[\e[48;5;$bg3;38;5;$bg2""m\] \[\e[48;5;$bg3;38;5;$fg2""m\] \[\e[48;5;$bg3;38;5;$fg3""m\]\W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
-	else
-		PS1="$ssh_flag\[\e[48;5;$bg2;38;5;$fg1""m\] \u \[\e[48;5;$bg3;38;5;$bg2""m\] \[\e[48;5;$bg3;38;5;$fg2""m\] \[\e[48;5;$bg3;38;5;$fg3""m\]\W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
-	fi
 
 	alias ls='ls --color=auto'
 	alias grep='grep --colour=auto'
 	alias egrep='egrep --colour=auto'
 	alias fgrep='fgrep --colour=auto'
-else
-	if [[ ${EUID} == 0 ]] ; then
-		# show root@ when we don't have colors
-		PS1='\u@\h \W \$ '
+
+	# Check if ssh user
+	export|grep SSH_TTY -i > /dev/null
+	if [ $? == 0 ]; then
+		ssh_flag="󱩜 "
+		ssh_color="\[\e[0m\]\[\e[38;5;27m\]"
 	else
-		PS1='\u@\h \w \$ '
+		ssh_flag="󰐂 "
+		ssh_color="\[\e[0m\]\[\e[38;5;160m\]"
+	fi
+
+	bg1=128
+	fg1=206
+	bg2=55
+	fg2=69
+	bg3=17
+	fg3=34
+	if [[ ${EUID} == 0 ]]; then
+		PS1="$ssh_color$ssh_flag\[\e[48;5;$bg2;38;5;$fg1""m\]▌\u\[\e[48;5;$bg3;38;5;$bg2""m\]  \[\e[48;5;$bg3;38;5;$fg2""m\] \[\e[48;5;$bg3;38;5;$fg3""m\]\W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
+	else
+		PS1="$ssh_color$ssh_flag\[\e[48;5;$bg2;38;5;$fg1""m\]▌\u\[\e[48;5;$bg3;38;5;$bg2""m\]  \[\e[48;5;$bg3;38;5;$fg2""m\] \[\e[48;5;$bg3;38;5;$fg3""m\]\W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
+	fi
+
+	if [[ -n $TMUX ]]; then
+		PROMPT_COMMAND=grey_last_prompt
+	fi
+
+
+else
+	export|grep SSH_TTY -i > /dev/null
+	if [ $? == 0 ]; then
+		ssh_flag="󱩜 "
+	else
+		ssh_flag="󰐂 "
+	fi
+	if [[ ${EUID} == 0 ]]; then
+		PS1="$ssh_flag▌\u  \W 󰄾 "
+	else
+		PS1="$ssh_flag▌\u  \W 󰄾 "
 	fi
 fi
 
-function forget() {
-    while true; do
-        # ssh_flag
-        ssh_flag=''
-        export|grep SSH_TTY -i > /dev/null
-        if [ $? == 0 ]; then
-            ssh_flag='󱩜'
-            ssh_color='[38;5;27m'
-        else
-            ssh_flag='󰐂'
-            ssh_color='[38;5;160m'
-        fi
+# grey last command's prompt
+function grey_last_prompt() {
+	screen=`tmux capturep -p`
+	last=`grep -n  <<< "$screen"| tail -n 1| cut -d ':' -f 1`
+	if [[ -n $last ]]; then
+		grey=`grep  <<< "$screen"| tail -n 1`;grey=${grey//};grey=`cut -d ':' -f 1 <<< ${grey//:}`
+		echo -n "x\r"
+		now=`tmux capturep -p| grep -n x| tail -n 1| cut -d ':' -f 1`
 
-        # username
-        username=`whoami`
-
-        # powerd
-        if [[ $PWD == $HOME ]]; then
-            powerd='~'
-        else
-            powerd=${PWD##*/}
-        fi
-
-        #root
-        if [[ $EUID == 0 ]]; then
-            root=''
-        else
-            root=''
-        fi
-
-        read -e -p $ssh_color$ssh_flag' [48;5;55;38;5;206m '$username' [48;5;17;38;5;55m  [48;5;17;38;5;69m'$root' [48;5;17;38;5;34m'$powerd' [0m[38;5;17m[0m ' cmd
-        echo -e "\e[1A\r\e[38;5;239m$ssh_flag  $username   $root $powerd 󰄾\e[0m"
-        eval "$cmd"
-    done
+		diff=$((now - last))
+		echo -n -e "\e[$diff""A\r\e[38;5;239m$grey󰄾\e[$diff""B\r"
+	fi
 }
 
 unset use_color safe_term match_lhs sh
@@ -202,5 +175,3 @@ ex ()
     echo "'$1' is not a valid file"
   fi
 }
-
-#nice_ps1
