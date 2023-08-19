@@ -34,10 +34,11 @@ colors() {
 [ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
 # autocomplete
-bind 'TAB:menu-complete'
-bind '"\e[Z":menu-complete-backward'
+#bind 'TAB:menu-complete'
+bind '"\e[Z":menu-complete'
 #bind 'set show-all-if-ambiguous on'
 use_color=true
+echo_git_branch=false
 
 # Set colorful PS1 only on colorful terminals.
 # dircolors --print-database uses its own built-in database
@@ -78,16 +79,26 @@ if ${use_color} ; then
 		ssh_color="\[\e[0m\]\[\e[38;5;160m\]"
 	fi
 
+    # git branch
+    git_flag=""
+    if $echo_git_branch ; then
+        branch=`git branch 2> /dev/null`
+        if [ $? == 0 ]; then
+            git_flag=""
+        fi
+    fi
+
 	bg1=128
 	fg1=206
 	bg2=55
 	fg2=69
 	bg3=17
 	fg3=34
+    fgw=3
 	if [[ ${EUID} == 0 ]]; then
-		PS1="$ssh_color$ssh_flag\[\e[48;5;$bg2;38;5;$fg1""m\]▌\u\[\e[48;5;$bg3;38;5;$bg2""m\]  \[\e[48;5;$bg3;38;5;$fg2""m\] \[\e[48;5;$bg3;38;5;$fg3""m\]\W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
+		PS1="$ssh_color$ssh_flag\[\e[48;5;$bg2;38;5;$fg1""m\]▌\[\e[38;5;$fgw""m\] \u\[\e[48;5;$bg3;38;5;$bg2""m\]  \[\e[48;5;$bg3;38;5;$fg3""m\]\W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
 	else
-		PS1="$ssh_color$ssh_flag\[\e[48;5;$bg2;38;5;$fg1""m\]▌\u\[\e[48;5;$bg3;38;5;$bg2""m\]  \[\e[48;5;$bg3;38;5;$fg2""m\] \[\e[48;5;$bg3;38;5;$fg3""m\]\W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
+		PS1="$ssh_color$ssh_flag\[\e[48;5;$bg2;38;5;$fg1""m\]▌\[\e[38;5;$fg2""m\] \u\[\e[48;5;$bg3;38;5;$bg2""m\]  \[\e[48;5;$bg3;38;5;$fg3""m\]\W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
 	fi
 
 	if [[ -n $TMUX ]]; then
@@ -111,6 +122,7 @@ fi
 
 # grey last command's prompt
 function grey_last_prompt() {
+    status=$?
 	screen=`tmux capturep -p`
 	last=`grep -n  <<< "$screen"| tail -n 1| cut -d ':' -f 1`
 	if [[ -n $last ]]; then
@@ -118,8 +130,14 @@ function grey_last_prompt() {
 		echo -n "x\r"
 		now=`tmux capturep -p| grep -n x| tail -n 1| cut -d ':' -f 1`
 
+        if [[ $status == 0 ]]; then
+            st_color="\e[38;5;2m"
+        else
+            st_color="\e[38;5;1m"
+        fi
+
 		diff=$((now - last))
-		echo -n -e "\e[$diff""A\r\e[38;5;239m$grey󰄾\e[$diff""B\r"
+		echo -n -e "\e[$diff""A\r\e[38;5;239m$grey$st_color󰄾\e[$diff""B\r"
 	fi
 }
 
