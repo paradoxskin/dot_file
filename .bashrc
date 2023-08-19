@@ -43,6 +43,7 @@ use_color=true
 echo_git_branch=true
 echo_git_sha1=true
 echo_git_sha1_len=3
+echo_git_pushed=true
 
 # Set colorful PS1 only on colorful terminals.
 # dircolors --print-database uses its own built-in database
@@ -158,7 +159,20 @@ function get_git() {
         fi
     fi
 
-    echo -e "$sha1_flag$branch_flag"
+    push_flag=""
+    if $echo_git_pushed ; then
+        st=`git status 2> /dev/null`
+        if [ $? == 0 ]; then
+            grep -q -E "git push|git add" <<< $st
+            if [ $? == 0 ]; then
+                push_flag="✗ "
+            else
+                push_flag="✔️ "
+            fi
+        fi
+    fi
+
+    echo "$sha1_flag$branch_flag$push_flag"
 }
 
 unset use_color safe_term match_lhs sh
