@@ -37,8 +37,12 @@ colors() {
 #bind 'TAB:menu-complete'
 bind '"\e[Z":menu-complete'
 #bind 'set show-all-if-ambiguous on'
+
+# set true or false
 use_color=true
-echo_git_branch=false
+echo_git_branch=true
+echo_git_sha1=true
+echo_git_sha1_len=3
 
 # Set colorful PS1 only on colorful terminals.
 # dircolors --print-database uses its own built-in database
@@ -79,26 +83,20 @@ if ${use_color} ; then
 		ssh_color="\[\e[0m\]\[\e[38;5;160m\]"
 	fi
 
-    # git branch
-    git_flag=""
-    if $echo_git_branch ; then
-        branch=`git branch 2> /dev/null`
-        if [ $? == 0 ]; then
-            git_flag=""
-        fi
-    fi
-
-	bg1=128
+	bg1=128 # not use for now
 	fg1=206
 	bg2=55
 	fg2=69
-	bg3=17
+	bg3=17 # dir
 	fg3=34
-    fgw=3
+    fg4=3 # root color
+    fg5=172 # branch color
+    fg6=172 # sha1 color
+
 	if [[ ${EUID} == 0 ]]; then
-		PS1="$ssh_color$ssh_flag\[\e[48;5;$bg2;38;5;$fg1""m\]▌\[\e[38;5;$fgw""m\] \u\[\e[48;5;$bg3;38;5;$bg2""m\]  \[\e[48;5;$bg3;38;5;$fg3""m\]\W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
+		PS1="$ssh_color$ssh_flag\[\e[48;5;$bg2;38;5;$fg1""m\]▌\[\e[38;5;$fg4""m\] \u\[\e[48;5;$bg3;38;5;$bg2""m\]  \[\e[48;5;$bg3;38;5;$fg3""m\]\W$git_flag \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
 	else
-		PS1="$ssh_color$ssh_flag\[\e[48;5;$bg2;38;5;$fg1""m\]▌\[\e[38;5;$fg2""m\] \u\[\e[48;5;$bg3;38;5;$bg2""m\]  \[\e[48;5;$bg3;38;5;$fg3""m\]\W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
+		PS1="$ssh_color$ssh_flag\[\e[48;5;$bg2;38;5;$fg1""m\]▌\[\e[38;5;$fg2""m\] \u\[\e[48;5;$bg3;38;5;$bg2""m\]  \[\e[48;5;$bg3;38;5;$fg5""m\]\$(get_git)\[\e[48;5;$bg3;38;5;$fg3""m\]\W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
 	fi
 
 	if [[ -n $TMUX ]]; then
@@ -139,6 +137,28 @@ function grey_last_prompt() {
 		diff=$((now - last))
 		echo -n -e "\e[$diff""A\r\e[38;5;239m$grey$st_color󰄾\e[$diff""B\r"
 	fi
+
+}
+
+function get_git() {
+    # git branch
+    branch_flag=""
+    if $echo_git_branch ; then
+        branch=`git branch 2> /dev/null`
+        if [ $? == 0 ]; then
+            branch_flag="${branch/* /} "
+        fi
+    fi
+
+    sha1_flag=""
+    if $echo_git_sha1 ; then
+        sha1=`git rev-parse HEAD 2> /dev/null`
+        if [ $? == 0 ]; then
+            sha1_flag="${sha1:1:$echo_git_sha1_len}"
+        fi
+    fi
+
+    echo -e "$sha1_flag$branch_flag"
 }
 
 unset use_color safe_term match_lhs sh
