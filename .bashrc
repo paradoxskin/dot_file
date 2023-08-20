@@ -163,11 +163,16 @@ function get_git() {
     if $echo_git_pushed ; then
         st=`git status 2> /dev/null`
         if [ $? == 0 ]; then
-            grep -q -E "git push|git add" <<< $st
+            grep -q -E "nothing to commit, working tree clean" <<< $st
             if [ $? == 0 ]; then
-                push_flag="✗ "
+                grep -q -E "git push" <<< $st
+                if [ $? == 0 ]; then
+                    push_flag="✗ "
+                else
+                    push_flag="✔️ "
+                fi
             else
-                push_flag="✔️ "
+                push_flag="✗ "
             fi
         fi
     fi
