@@ -113,9 +113,9 @@ else
 		ssh_flag="󰐂 "
 	fi
 	if [[ ${EUID} == 0 ]]; then
-		PS1="$ssh_flag▌\u  \W 󰄾 "
+		PS1="$ssh_flag▌ \u  \$(get_git)\W 󰄾 "
 	else
-		PS1="$ssh_flag▌\u  \W 󰄾 "
+		PS1="$ssh_flag▌ \u  \$(get_git)\W 󰄾 "
 	fi
 fi
 
@@ -167,7 +167,7 @@ function get_git() {
             if [ $? == 0 ]; then
                 grep -q -E "git push" <<< $st
                 if [ $? == 0 ]; then
-                    push_flag="✗ "
+                    push_flag="⇑ "
                 else
                     push_flag="✔️ "
                 fi
