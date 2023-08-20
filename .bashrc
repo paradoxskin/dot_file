@@ -95,7 +95,7 @@ if ${use_color} ; then
     fg6=172 # sha1 color
 
 	if [[ ${EUID} == 0 ]]; then
-		PS1="$ssh_color$ssh_flag\[\e[48;5;$bg2;38;5;$fg1""m\]▌\[\e[38;5;$fg4""m\] \u\[\e[48;5;$bg3;38;5;$bg2""m\]  \[\e[48;5;$bg3;38;5;$fg3""m\]\W$git_flag \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
+		PS1="$ssh_color$ssh_flag\[\e[48;5;$bg2;38;5;$fg1""m\]▌\[\e[38;5;$fg4""m\] \u\[\e[48;5;$bg3;38;5;$bg2""m\]  \[\e[48;5;$bg3;38;5;$fg5""m\]\$(get_git)\[\e[48;5;$bg3;38;5;$fg3""m\]\W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
 	else
 		PS1="$ssh_color$ssh_flag\[\e[48;5;$bg2;38;5;$fg1""m\]▌\[\e[38;5;$fg2""m\] \u\[\e[48;5;$bg3;38;5;$bg2""m\]  \[\e[48;5;$bg3;38;5;$fg5""m\]\$(get_git)\[\e[48;5;$bg3;38;5;$fg3""m\]\W \[\e[0m\]\[\e[38;5;$bg3""m\]\[\e[0m\] "
 	fi
@@ -169,7 +169,7 @@ function get_git() {
                 if [ $? == 0 ]; then
                     push_flag="⇑ "
                 else
-                    push_flag="✔️ "
+                    push_flag="✓ "
                 fi
             else
                 push_flag="✗ "
