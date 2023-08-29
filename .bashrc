@@ -145,7 +145,7 @@ function get_git() {
     # git branch
     branch_flag=""
     if $echo_git_branch ; then
-        branch=`git branch 2> /dev/null`
+        branch=`git branch 2> /dev/null| grep \*`
         if [ $? == 0 ]; then
             branch_flag="${branch/* /} "
         fi
