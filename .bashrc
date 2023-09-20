@@ -42,7 +42,7 @@ bind '"\e[Z":menu-complete'
 use_color=true
 echo_git_branch=true
 echo_git_sha1=true
-echo_git_sha1_len=3
+echo_git_sha1_len=5
 echo_git_pushed=true
 
 # Set colorful PS1 only on colorful terminals.
@@ -155,7 +155,7 @@ function get_git() {
     if $echo_git_sha1 ; then
         sha1=`git rev-parse HEAD 2> /dev/null`
         if [ $? == 0 ]; then
-            sha1_flag="${sha1:1:$echo_git_sha1_len}"
+            sha1_flag="${sha1:0:$echo_git_sha1_len}"
         fi
     fi
 
