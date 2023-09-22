@@ -194,6 +194,8 @@ alias bye="shutdown now"
 alias hk="~/.scripts/hook.sh"
 alias gk="~/.scripts/goHook.sh"
 alias ck="~/.scripts/clHook.sh"
+alias scan="nmcli device wifi list"
+alias connect="nmcli device wifi connect "
 alias ceat="feh --bg-max ~/Pictures/PICO-8_CheatSheet_0111Gm_4k.png"
 
 source ~/.profile
