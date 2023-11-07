@@ -200,6 +200,7 @@ alias scan="nmcli device wifi list"
 alias connect="nmcli device wifi connect "
 alias ceat="feh --bg-max ~/Pictures/PICO-8_CheatSheet_0111Gm_4k.png"
 alias nv="nvim"
+alias pc="proxychains4"
 
 source ~/.profile
 
