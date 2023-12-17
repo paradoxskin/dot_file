@@ -191,16 +191,11 @@ alias ra=ranger
 alias iam=neofetch
 alias fb="source .bashrc"
 alias bye="shutdown now"
-alias hk="~/.scripts/hook.sh"
-alias gk="~/.scripts/goHook.sh"
-alias ck="~/.scripts/clHook.sh"
-alias td="~/.scripts/writeTODO.sh -w "
-alias tdone="~/.scripts/writeTODO.sh -c"
 alias scan="nmcli device wifi list"
-alias connect="nmcli device wifi connect "
-alias ceat="feh --bg-max ~/Pictures/PICO-8_CheatSheet_0111Gm_4k.png"
-alias nv="nvim"
-alias pc="proxychains4"
+alias connect="nmcli device wifi connect"
+alias nv=nvim
+alias pc=proxychains4
+alias gk=". gk"
 
 source ~/.profile
 
