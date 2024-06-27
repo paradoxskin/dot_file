@@ -101,7 +101,8 @@ if ${use_color} ; then
 	fi
 
 	if [[ -n $TMUX ]]; then
-		PROMPT_COMMAND=grey_last_prompt
+		#PROMPT_COMMAND=grey_last_prompt
+		a=1
 	fi
 
 
